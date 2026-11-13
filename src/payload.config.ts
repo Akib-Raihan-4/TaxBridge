@@ -6,8 +6,18 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
-import { Users } from './collections/Users'
+import { Enquiries } from './collections/Enquiries'
+import { Faqs } from './collections/Faqs'
+import { LegalPages } from './collections/LegalPages'
 import { Media } from './collections/Media'
+import { Posts } from './collections/Posts'
+import { PricingItems } from './collections/PricingItems'
+import { Services } from './collections/Services'
+import { Testimonials } from './collections/Testimonials'
+import { Users } from './collections/Users'
+import { AboutPage } from './globals/AboutPage'
+import { HomePage } from './globals/HomePage'
+import { SiteSettings } from './globals/SiteSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -19,7 +29,18 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media],
+  collections: [
+    Services,
+    PricingItems,
+    Faqs,
+    Testimonials,
+    Posts,
+    LegalPages,
+    Media,
+    Enquiries,
+    Users,
+  ],
+  globals: [HomePage, AboutPage, SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -29,6 +50,10 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
+    migrationDir: path.resolve(dirname, 'migrations'),
+    // Schema changes go through committed migrations (`npm run migrate:create`, then
+    // `npm run migrate`). Auto-push is only switched on for throwaway test databases.
+    push: process.env.PAYLOAD_DB_PUSH === 'true',
   }),
   sharp,
   plugins: [

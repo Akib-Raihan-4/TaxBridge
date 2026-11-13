@@ -55,6 +55,11 @@ jobs:
       - name: Unit and component tests
         run: npm run test:unit
 
+      - name: Migrations apply to an empty database
+        run: |
+          PGPASSWORD=postgres createdb -h localhost -U postgres migrate_check
+          DATABASE_URL=postgres://postgres:postgres@localhost:5432/migrate_check npm run migrate
+
       - name: Integration tests
         run: npm run test:int
 

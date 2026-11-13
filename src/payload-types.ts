@@ -67,8 +67,15 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
+    services: Service;
+    'pricing-items': PricingItem;
+    faqs: Faq;
+    testimonials: Testimonial;
+    posts: Post;
+    'legal-pages': LegalPage;
     media: Media;
+    enquiries: Enquiry;
+    users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -76,8 +83,15 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
+    services: ServicesSelect<false> | ServicesSelect<true>;
+    'pricing-items': PricingItemsSelect<false> | PricingItemsSelect<true>;
+    faqs: FaqsSelect<false> | FaqsSelect<true>;
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
+    posts: PostsSelect<false> | PostsSelect<true>;
+    'legal-pages': LegalPagesSelect<false> | LegalPagesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -87,8 +101,16 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'home-page': HomePage;
+    'about-page': AboutPage;
+    'site-settings': SiteSetting;
+  };
+  globalsSelect: {
+    'home-page': HomePageSelect<false> | HomePageSelect<true>;
+    'about-page': AboutPageSelect<false> | AboutPageSelect<true>;
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -119,10 +141,281 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "services".
+ */
+export interface Service {
+  id: number;
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  category: 'individuals' | 'business' | 'super' | 'advisory' | 'registrations';
+  /**
+   * One or two sentences shown on service cards. Up to 200 characters.
+   */
+  summary: string;
+  icon?:
+    | (
+        | 'calculator'
+        | 'receipt'
+        | 'briefcase'
+        | 'building-2'
+        | 'chart-line'
+        | 'piggy-bank'
+        | 'book-open'
+        | 'users'
+        | 'file-text'
+        | 'shield-check'
+        | 'hard-hat'
+        | 'refresh-cw'
+      )
+    | null;
+  whoFor?: string | null;
+  inclusions?:
+    | {
+        item: string;
+        id?: string | null;
+      }[]
+    | null;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  faqs?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Lower numbers appear first.
+   */
+  order?: number | null;
+  /**
+   * How this page appears in Google and when shared. Leave blank to use defaults.
+   */
+  seo?: {
+    /**
+     * Up to 60 characters.
+     */
+    title?: string | null;
+    /**
+     * One or two sentences, up to 160 characters.
+     */
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  /**
+   * Describe the image for people who cannot see it.
+   */
+  alt: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pricing-items".
+ */
+export interface PricingItem {
+  id: number;
+  /**
+   * For example: Individual tax return
+   */
+  label: string;
+  /**
+   * Whole dollars. Shown on the site as "from $X".
+   */
+  fromPrice: number;
+  gst: 'inclusive' | 'exclusive';
+  /**
+   * Optional short note.
+   */
+  note?: string | null;
+  /**
+   * Optional — links this price to a service page.
+   */
+  service?: (number | null) | Service;
+  /**
+   * Lower numbers appear first.
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqs".
+ */
+export interface Faq {
+  id: number;
+  question: string;
+  answer: string;
+  category: 'general' | 'tax' | 'business' | 'super' | 'fees';
+  /**
+   * Lower numbers appear first.
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials".
+ */
+export interface Testimonial {
+  id: number;
+  quote: string;
+  /**
+   * As the client agreed to be shown, e.g. "Sarah M."
+   */
+  name: string;
+  role?: string | null;
+  rating?: number | null;
+  /**
+   * Only approved testimonials appear on the website.
+   */
+  approved?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: number;
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  /**
+   * Short summary shown in article lists. Up to 200 characters.
+   */
+  excerpt?: string | null;
+  cover?: (number | null) | Media;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  publishedAt?: string | null;
+  /**
+   * How this page appears in Google and when shared. Leave blank to use defaults.
+   */
+  seo?: {
+    /**
+     * Up to 60 characters.
+     */
+    title?: string | null;
+    /**
+     * One or two sentences, up to 160 characters.
+     */
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * Privacy policy, terms of use and similar pages.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legal-pages".
+ */
+export interface LegalPage {
+  id: number;
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries".
+ */
+export interface Enquiry {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string | null;
+  service?: string | null;
+  message: string;
+  status: 'new' | 'in-progress' | 'closed';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
   id: number;
+  name?: string | null;
+  role?: ('admin' | 'editor') | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -142,25 +435,6 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -187,12 +461,40 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: number | User;
+        relationTo: 'services';
+        value: number | Service;
+      } | null)
+    | ({
+        relationTo: 'pricing-items';
+        value: number | PricingItem;
+      } | null)
+    | ({
+        relationTo: 'faqs';
+        value: number | Faq;
+      } | null)
+    | ({
+        relationTo: 'testimonials';
+        value: number | Testimonial;
+      } | null)
+    | ({
+        relationTo: 'posts';
+        value: number | Post;
+      } | null)
+    | ({
+        relationTo: 'legal-pages';
+        value: number | LegalPage;
       } | null)
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'enquiries';
+        value: number | Enquiry;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -238,26 +540,114 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users_select".
+ * via the `definition` "services_select".
  */
-export interface UsersSelect<T extends boolean = true> {
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  resetPasswordRequestedAt?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
-  sessions?:
+export interface ServicesSelect<T extends boolean = true> {
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  category?: T;
+  summary?: T;
+  icon?: T;
+  whoFor?: T;
+  inclusions?:
     | T
     | {
+        item?: T;
         id?: T;
-        createdAt?: T;
-        expiresAt?: T;
       };
+  body?: T;
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  order?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pricing-items_select".
+ */
+export interface PricingItemsSelect<T extends boolean = true> {
+  label?: T;
+  fromPrice?: T;
+  gst?: T;
+  note?: T;
+  service?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqs_select".
+ */
+export interface FaqsSelect<T extends boolean = true> {
+  question?: T;
+  answer?: T;
+  category?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials_select".
+ */
+export interface TestimonialsSelect<T extends boolean = true> {
+  quote?: T;
+  name?: T;
+  role?: T;
+  rating?: T;
+  approved?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  excerpt?: T;
+  cover?: T;
+  body?: T;
+  publishedAt?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legal-pages_select".
+ */
+export interface LegalPagesSelect<T extends boolean = true> {
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  body?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -276,6 +666,45 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries_select".
+ */
+export interface EnquiriesSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  phone?: T;
+  service?: T;
+  message?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -316,6 +745,396 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page".
+ */
+export interface HomePage {
+  id: number;
+  hero: {
+    eyebrow?: string | null;
+    heading: string;
+    subheading?: string | null;
+    primaryButton?: {
+      label?: string | null;
+      /**
+       * A page on this site such as /contact, or a full web address.
+       */
+      href?: string | null;
+    };
+    secondaryButton?: {
+      label?: string | null;
+      /**
+       * A page on this site such as /contact, or a full web address.
+       */
+      href?: string | null;
+    };
+    image?: (number | null) | Media;
+  };
+  pillars?:
+    | {
+        title: string;
+        description?: string | null;
+        icon?:
+          | (
+              | 'calculator'
+              | 'receipt'
+              | 'briefcase'
+              | 'building-2'
+              | 'chart-line'
+              | 'piggy-bank'
+              | 'book-open'
+              | 'users'
+              | 'file-text'
+              | 'shield-check'
+              | 'hard-hat'
+              | 'refresh-cw'
+            )
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  about?: {
+    heading?: string | null;
+    body?: string | null;
+  };
+  /**
+   * Services shown on the home page, in this order.
+   */
+  featuredServices?: (number | Service)[] | null;
+  cta?: {
+    heading?: string | null;
+    body?: string | null;
+    button?: {
+      label?: string | null;
+      /**
+       * A page on this site such as /contact, or a full web address.
+       */
+      href?: string | null;
+    };
+  };
+  /**
+   * How this page appears in Google and when shared. Leave blank to use defaults.
+   */
+  seo?: {
+    /**
+     * Up to 60 characters.
+     */
+    title?: string | null;
+    /**
+     * One or two sentences, up to 160 characters.
+     */
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-page".
+ */
+export interface AboutPage {
+  id: number;
+  heading: string;
+  intro?: string | null;
+  story?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Only list qualifications the firm can substantiate.
+   */
+  credentials?:
+    | {
+        title: string;
+        detail?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  whyUs?:
+    | {
+        title: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * How this page appears in Google and when shared. Leave blank to use defaults.
+   */
+  seo?: {
+    /**
+     * Up to 60 characters.
+     */
+    title?: string | null;
+    /**
+     * One or two sentences, up to 160 characters.
+     */
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  businessName: string;
+  tagline?: string | null;
+  logo?: (number | null) | Media;
+  /**
+   * The first number is used for the "Call" button.
+   */
+  phones?:
+    | {
+        /**
+         * e.g. Office, Mobile
+         */
+        label?: string | null;
+        number: string;
+        id?: string | null;
+      }[]
+    | null;
+  email?: string | null;
+  address?: {
+    street?: string | null;
+    suburb?: string | null;
+    state?: string | null;
+    postcode?: string | null;
+    mapUrl?: string | null;
+  };
+  parkingNote?: string | null;
+  openingHours?:
+    | {
+        /**
+         * e.g. Mon – Fri
+         */
+        days: string;
+        /**
+         * e.g. 9am – 5pm, or Closed
+         */
+        hours: string;
+        /**
+         * e.g. July to September only
+         */
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  socials?:
+    | {
+        platform: 'Facebook' | 'LinkedIn' | 'Instagram' | 'Google' | 'X';
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  abn?: string | null;
+  taxAgentNumber?: string | null;
+  /**
+   * Only list memberships the firm actually holds.
+   */
+  memberships?:
+    | {
+        name: string;
+        logo?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Tick only if the firm participates in such a scheme.
+   */
+  showPslStatement?: boolean | null;
+  footerNote?: string | null;
+  /**
+   * How this page appears in Google and when shared. Leave blank to use defaults.
+   */
+  seo?: {
+    /**
+     * Up to 60 characters.
+     */
+    title?: string | null;
+    /**
+     * One or two sentences, up to 160 characters.
+     */
+    description?: string | null;
+    image?: (number | null) | Media;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-page_select".
+ */
+export interface HomePageSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        eyebrow?: T;
+        heading?: T;
+        subheading?: T;
+        primaryButton?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+            };
+        secondaryButton?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+            };
+        image?: T;
+      };
+  pillars?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        icon?: T;
+        id?: T;
+      };
+  about?:
+    | T
+    | {
+        heading?: T;
+        body?: T;
+      };
+  featuredServices?: T;
+  cta?:
+    | T
+    | {
+        heading?: T;
+        body?: T;
+        button?:
+          | T
+          | {
+              label?: T;
+              href?: T;
+            };
+      };
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-page_select".
+ */
+export interface AboutPageSelect<T extends boolean = true> {
+  heading?: T;
+  intro?: T;
+  story?: T;
+  credentials?:
+    | T
+    | {
+        title?: T;
+        detail?: T;
+        id?: T;
+      };
+  whyUs?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  businessName?: T;
+  tagline?: T;
+  logo?: T;
+  phones?:
+    | T
+    | {
+        label?: T;
+        number?: T;
+        id?: T;
+      };
+  email?: T;
+  address?:
+    | T
+    | {
+        street?: T;
+        suburb?: T;
+        state?: T;
+        postcode?: T;
+        mapUrl?: T;
+      };
+  parkingNote?: T;
+  openingHours?:
+    | T
+    | {
+        days?: T;
+        hours?: T;
+        note?: T;
+        id?: T;
+      };
+  socials?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  abn?: T;
+  taxAgentNumber?: T;
+  memberships?:
+    | T
+    | {
+        name?: T;
+        logo?: T;
+        id?: T;
+      };
+  showPslStatement?: T;
+  footerNote?: T;
+  seo?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -19,6 +19,8 @@ if (!testUrl) {
 }
 
 process.env.DATABASE_URL = testUrl
+// Test databases are throwaway: let Payload create the schema directly
+process.env.PAYLOAD_DB_PUSH = 'true'
 process.env.PAYLOAD_SECRET ||= 'test-secret-not-for-production'
 // Never upload test files to Vercel Blob
 delete process.env.BLOB_READ_WRITE_TOKEN
