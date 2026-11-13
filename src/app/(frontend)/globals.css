@@ -1,0 +1,52 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens. Placeholder palette until the brand direction is chosen —
+ * change values here only; components must use the tokens, never raw colours.
+ */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: #ffffff;
+  --color-surface: #f6f8fa;
+  --color-foreground: #0f1b2d;
+  --color-muted: #51607a;
+  --color-border: #d9e0ea;
+  --color-primary: #0b4a6f;
+  --color-primary-hover: #083a57;
+  --color-primary-foreground: #ffffff;
+  --color-focus: #1d7fb8;
+
+  --radius-card: 0.75rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

@@ -1,0 +1,36 @@
+import { test, expect, Page } from '@playwright/test'
+import { login } from '../helpers/login'
+import { seedTestUser, cleanupTestUser, testUser } from '../helpers/seedUser'
+
+test.describe('Admin panel', () => {
+  let page: Page
+
+  test.beforeAll(async ({ browser, baseURL }) => {
+    await seedTestUser()
+
+    const context = await browser.newContext({ baseURL })
+    page = await context.newPage()
+
+    await login({ page, user: testUser })
+  })
+
+  test.afterAll(async () => {
+    await cleanupTestUser()
+  })
+
+  test('can navigate to dashboard', async () => {
+    await page.goto('/admin')
+    await expect(page).toHaveURL(/\/admin$/)
+    await expect(page.locator('span[title="Dashboard"]').first()).toBeVisible()
+  })
+
+  test('can navigate to list view', async () => {
+    await page.goto('/admin/collections/users')
+    await expect(page.locator('h1', { hasText: 'Users' }).first()).toBeVisible()
+  })
+
+  test('can navigate to create view', async () => {
+    await page.goto('/admin/collections/users/create')
+    await expect(page.locator('input[name="email"]')).toBeVisible()
+  })
+})
