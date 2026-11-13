@@ -1,40 +1,50 @@
 @import 'tailwindcss';
 
 /*
- * Design tokens. Placeholder palette until the brand direction is chosen —
- * change values here only; components must use the tokens, never raw colours.
+ * Design tokens — "Ledger" direction: warm paper, deep green ink, serif headings.
+ * Change values here only; components use the tokens, never raw colours.
  */
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
 
-  --color-background: #ffffff;
-  --color-surface: #f6f8fa;
-  --color-foreground: #0f1b2d;
-  --color-muted: #51607a;
-  --color-border: #d9e0ea;
-  --color-primary: #0b4a6f;
-  --color-primary-hover: #083a57;
-  --color-primary-foreground: #ffffff;
-  --color-focus: #1d7fb8;
-
-  --radius-card: 0.75rem;
+  --color-paper: #faf6ee;
+  --color-paper-deep: #f3ecdd;
+  --color-card: #fffdf8;
+  --color-ink: #1f3a2e;
+  --color-ink-hover: #16291f;
+  --color-body: #36473d;
+  --color-muted: #4d5f55;
+  --color-gold: #7d5f27;
+  --color-line: #e4dccb;
+  --color-focus: #2f6f52;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
   }
 
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+    background-color: var(--color-paper);
+    color: var(--color-body);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
 
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
   :focus-visible {
     outline: 2px solid var(--color-focus);
-    outline-offset: 2px;
+    outline-offset: 3px;
+    border-radius: 2px;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -48,5 +58,51 @@
       animation-duration: 0.01ms !important;
       transition-duration: 0.01ms !important;
     }
+  }
+}
+
+/* Long-form content from the CMS editor */
+@layer components {
+  .prose {
+    max-width: 68ch;
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+  .prose > * + * {
+    margin-top: 1.25em;
+  }
+  .prose h2 {
+    font-size: 1.625rem;
+    line-height: 1.25;
+    margin-top: 2em;
+  }
+  .prose h3 {
+    font-size: 1.25rem;
+    line-height: 1.3;
+    margin-top: 1.75em;
+  }
+  .prose a {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .prose ul,
+  .prose ol {
+    padding-left: 1.4em;
+  }
+  .prose ul {
+    list-style: disc;
+  }
+  .prose ol {
+    list-style: decimal;
+  }
+  .prose li + li {
+    margin-top: 0.4em;
+  }
+  .prose blockquote {
+    border-left: 2px solid var(--color-gold);
+    padding-left: 1em;
+    font-family: var(--font-serif);
+    font-style: italic;
   }
 }

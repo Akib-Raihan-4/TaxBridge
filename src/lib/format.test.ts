@@ -27,3 +27,10 @@ describe('formatPrice', () => {
     expect(formatPrice(1100)).toBe('$1,100')
   })
 })
+
+describe('formatDate', () => {
+  it('formats in Australian long form using Sydney time', async () => {
+    const { formatDate } = await import('./format')
+    expect(formatDate('2026-06-30T14:30:00.000Z')).toBe('1 July 2026')
+  })
+})

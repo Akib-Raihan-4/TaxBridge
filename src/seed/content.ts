@@ -20,7 +20,7 @@ export const services: SeedService[] = [
     category: 'individuals',
     icon: 'receipt',
     summary:
-      'Your return prepared and lodged correctly, with every deduction you are entitled to claimed.',
+      'Your return prepared and lodged correctly, including every deduction you are entitled to.',
     whoFor: 'Employees, contractors, retirees and anyone with investment or rental income.',
     inclusions: [
       'Salary, wages and allowances',

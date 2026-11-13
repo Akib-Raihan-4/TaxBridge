@@ -19,3 +19,13 @@ export function formatPrice(dollars: number): string {
     maximumFractionDigits: 0,
   }).format(dollars)
 }
+
+/** Format an ISO date for display, e.g. "14 November 2026". */
+export function formatDate(iso: string): string {
+  return new Intl.DateTimeFormat('en-AU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'Australia/Sydney',
+  }).format(new Date(iso))
+}
