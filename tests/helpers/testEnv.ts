@@ -24,3 +24,15 @@ process.env.PAYLOAD_DB_PUSH = 'true'
 process.env.PAYLOAD_SECRET ||= 'test-secret-not-for-production'
 // Never upload test files to Vercel Blob
 delete process.env.BLOB_READ_WRITE_TOKEN
+
+// Tests must never send real email or call the spam-check service. Blank (not
+// deleted) so the app server started by Playwright cannot pick the real values
+// up from .env.local either.
+for (const key of [
+  'RESEND_API_KEY',
+  'CONTACT_TO_EMAIL',
+  'TURNSTILE_SECRET_KEY',
+  'NEXT_PUBLIC_TURNSTILE_SITE_KEY',
+]) {
+  process.env[key] = ''
+}

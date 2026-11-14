@@ -18,6 +18,9 @@
   --color-gold: #7d5f27;
   --color-line: #e4dccb;
   --color-focus: #2f6f52;
+  --color-error: #a3271b;
+  --color-error-soft: #fbeeeb;
+  --color-success: #2f6f52;
 }
 
 @layer base {
